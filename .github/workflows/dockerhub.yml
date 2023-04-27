@@ -1,12 +1,10 @@
 name: dockerhub
 
 on:
-  push:
-    branches:
-      - main
+  [push]
 
 jobs:
-  push:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -24,11 +22,22 @@ jobs:
           username: rodrigodornelles
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v3
+      - name: Only build (dev)
+        if: github.ref != 'refs/heads/main'
+        uses: docker/build-push-action@v4
         with:
           context: .
-          push: true
+          push: false
+          tags: development:latest
+          platforms: >
+            linux/386,linux/amd64
+ 
+      - name: Build and push
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
           tags: rodrigodornelles/samp-gamemode-helloworld:latest
           platforms: >
             linux/386,linux/amd64
