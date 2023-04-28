@@ -1,3 +1,4 @@
 *.h   linguist-language=C++
 *.cpp   linguist-language=C++
 *.pwn   linguist-language=Pawn
+scriptfiles/map-*.txt   linguist-language=Pawn

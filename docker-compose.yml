@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+  samp:
+    image: "rodrigodornelles/sampgdk:latest"
+    command: ["samp", "test"]
+    working_dir: "/samp03"
+    ports:
+      - "7777:7777/udp"
+    volumes:
+      - "./plugins:/samp03/plugins"
+      - "./gamemodes:/samp03/gamemodes"
+      - "./scriptfiles:/samp03/scriptfiles"
+      - "./server_log.txt:/samp03/server_log.txt"
+    environment:
+      - "SAMP_GAMEMODE0=blank"
+      - "SAMP_PLUGINS=main.so"
+      - "SAMP_FILTERSCRIPTS="
+      - "SAMP_RCON_PASSWORD=secret"
+    
+  redis:
+    image: redis:6-alpine3.17
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
