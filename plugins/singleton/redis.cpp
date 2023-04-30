@@ -1,12 +1,14 @@
 #include "redis.hpp"
 
-cpp_redis::client* Redis::db()
+cpp_redis::client Redis::client_;
+
+cpp_redis::client& Redis::db()
 {
     if (!client_.is_connected()) {
         Connect();
     }
 
-    return &client_;
+    return client_;
 }
 
 void Redis::Connect()

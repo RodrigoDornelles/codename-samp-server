@@ -22,7 +22,7 @@ FetchContent_MakeAvailable(cpp_redis_vendor)
 add_samp_plugin(
     "main"
     "${CMAKE_CURRENT_SOURCE_DIR}/plugins/main.cpp"
-    #"${CMAKE_CURRENT_SOURCE_DIR}/plugins/singleton/redis.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/plugins/singleton/redis.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/plugins/main.def"
     "$ENV{SAMPSDK_DIR}/amxplugin.cpp"
 )

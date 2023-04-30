@@ -17,6 +17,8 @@ services:
       - "SAMP_PLUGINS=main.so"
       - "SAMP_FILTERSCRIPTS="
       - "SAMP_RCON_PASSWORD=secret"
+      - "REDIS_IP=redis"
+      - "REDIS_PORT=6379"
     
   redis:
     image: redis:6-alpine3.17

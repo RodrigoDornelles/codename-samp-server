@@ -6,7 +6,7 @@
 class Redis
 {
     public:
-        static cpp_redis::client* db();
+        static cpp_redis::client& db();
 
     private:
         static cpp_redis::client client_;
