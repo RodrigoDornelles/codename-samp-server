@@ -4,10 +4,10 @@ include("FetchContent")
 include("AMXConfig")
 include("AddSAMPPlugin")
 
-set(CXX_STANDARD 11)
+set(CXX_STANDARD 17)
 set(CMAKE_SKIP_INSTALL_RULES True)
 include_directories("$ENV{SAMPSDK_DIR}")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/plugins/singleton")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/plugins")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/_deps/cpp_redis_vendor-src/includes")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/_deps/cpp_redis_vendor-src/tacopie/includes")
 
@@ -22,6 +22,7 @@ FetchContent_MakeAvailable(cpp_redis_vendor)
 add_samp_plugin(
     "main"
     "${CMAKE_CURRENT_SOURCE_DIR}/plugins/main.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/plugins/manager/map.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/plugins/singleton/redis.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/plugins/main.def"
     "$ENV{SAMPSDK_DIR}/amxplugin.cpp"

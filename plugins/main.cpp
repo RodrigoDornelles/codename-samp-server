@@ -8,45 +8,30 @@
 #include <sampgdk/core.h>
 #include <sampgdk/sdk.h>
 
+#include "manager/map.hpp"
+
 void Spawn(int playerid) {
   TogglePlayerSpectating(playerid, 0);
   SetSpawnInfo(playerid, 0, 0, 1786.5126,-1299.9512,120.2656,3.74705, 0, 0, 0, 0, 0, 0 );
   SpawnPlayer(playerid);
 }
 
-void SAMPGDK_CALL CameraSpawn0(int timerid, void *params) {
-  SetPlayerPos(0, 1451.6907, -807.7687, 84.2744);
-  SetPlayerCameraPos(0, 1783.8560,-1295.5787,120.2656);
-  SetPlayerCameraLookAt(0, 1451.6907,-807.7687,84.2744, CAMERA_CUT);
-}
-
-void SAMPGDK_CALL CameraSpawn1(int timerid, void *params) {
-  SetPlayerCameraLookAt(0, 1786.5126,-1299.9512,120.2656, CAMERA_MOVE);
-}
-
-void SAMPGDK_CALL CameraSpawn2(int timerid, void *params) {
-  Spawn(0);
-}
-
 PLUGIN_EXPORT bool PLUGIN_CALL OnGameModeInit() {
   SetGameModeText("Hello, World!");
   AddPlayerClass(0, 1958.3783f, 1343.1572f, 15.3746f, 269.1425f,
                  0, 0, 0, 0, 0, 0);
-  /* SetTimer(1000, true, PrintTickCountTimer, 0); */
   return true;
 }
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid) {
+  manager::Map::OnPlayerConnect(playerid);
   SendClientMessage(playerid, 0xFFFFFFFF, "Welcome to the HelloWorld server!");
-  TogglePlayerSpectating(playerid, 1);
-  SetTimer(100, false, CameraSpawn0, 0);
-  SetTimer(1000, false, CameraSpawn1, 0);
-  SetTimer(8000, false, CameraSpawn2, 0);
   return true;
 }
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSpawn(int playerid)
 {
+  manager::Map::OnPlayerSpawn(playerid);
   SetPlayerHealth(playerid, (float) 0x7f7fffff);
   return 1;
 }
@@ -95,7 +80,9 @@ PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports() {
 }
 
 PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
-  return sampgdk::Load(ppData);
+  auto loaded = sampgdk::Load(ppData);
+  manager::Map::init();
+  return loaded;
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload() {

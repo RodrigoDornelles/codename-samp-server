@@ -9,7 +9,7 @@ class Redis
         static cpp_redis::client& db();
 
     private:
-        static cpp_redis::client client_;
+        inline static cpp_redis::client client_;
         static void Connect();
 };
 

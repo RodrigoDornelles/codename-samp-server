@@ -1,6 +1,6 @@
-#include "redis.hpp"
+#include <sampgdk/core.h>
 
-cpp_redis::client Redis::client_;
+#include "redis.hpp"
 
 cpp_redis::client& Redis::db()
 {
@@ -13,7 +13,8 @@ cpp_redis::client& Redis::db()
 
 void Redis::Connect()
 {
-    auto ip = std::getenv("REDIS_IP");
-    auto port = std::stoi(std::getenv("REDIS_PORT"));
+    auto ip = "redis";///< @todo std::getenv("REDIS_IP");
+    auto port = 6379;///< @todo std::stoi(std::getenv("REDIS_PORT"));
+    sampgdk::logprintf("[singleton:redis] connecting to redis %s:%d...", ip, port);
     client_.connect(ip, port);
 }
