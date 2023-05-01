@@ -37,7 +37,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerDisconnect(int playerid, int reason)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSpawn(int playerid)
 {
-  manager::Map::AddPlayerObjects(playerid);
+  manager::Map::AddPlayerObjects(playerid, GetPlayerVirtualWorld(playerid));
   SetPlayerHealth(playerid, (float) 0x7f7fffff);
   return 1;
 }
@@ -77,7 +77,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid,
     return true;
   }
   if (strcmp(cmdtext, "/mmapo") == 0) {
-    manager::Map::AddPlayerObjects(playerid);
+    manager::Map::AddPlayerObjects(playerid, GetPlayerVirtualWorld(playerid));
     return true;
   }
   if (strcmp(cmdtext, "/gmx") == 0) {

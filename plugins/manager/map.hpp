@@ -10,7 +10,7 @@ class Map {
     public:
         static void init(void);
         static void OnPlayerConnect(uint16_t playerid);
-        static void AddPlayerObjects(uint16_t playerid);
+        static void AddPlayerObjects(uint16_t playerid, uint16_t world_id);
         static void ClearPlayerObjects(uint16_t playerid);
     
     private:
