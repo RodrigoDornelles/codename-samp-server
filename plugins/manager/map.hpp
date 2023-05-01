@@ -10,7 +10,8 @@ class Map {
     public:
         static void init(void);
         static void OnPlayerConnect(uint16_t playerid);
-        static void OnPlayerSpawn(uint16_t playerid);
+        static void AddPlayerObjects(uint16_t playerid);
+        static void ClearPlayerObjects(uint16_t playerid);
     
     private:
         inline static uint16_t player_objects[MAX_PLAYERS];

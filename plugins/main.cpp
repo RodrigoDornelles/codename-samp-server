@@ -29,9 +29,15 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid) {
   return true;
 }
 
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerDisconnect(int playerid, int reason)
+{
+  manager::Map::ClearPlayerObjects(playerid);
+  return true;
+}
+
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSpawn(int playerid)
 {
-  manager::Map::OnPlayerSpawn(playerid);
+  manager::Map::AddPlayerObjects(playerid);
   SetPlayerHealth(playerid, (float) 0x7f7fffff);
   return 1;
 }
@@ -60,6 +66,18 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerCommandText(int playerid,
   }
   if (strcmp(cmdtext, "/spawn") == 0) {
     Spawn(playerid);
+    return true;
+  }
+  if (strcmp(cmdtext, "/mmi") == 0) {
+    manager::Map::init();
+    return true;
+  }
+  if (strcmp(cmdtext, "/mmcpo") == 0) {
+    manager::Map::ClearPlayerObjects(playerid);
+    return true;
+  }
+  if (strcmp(cmdtext, "/mmapo") == 0) {
+    manager::Map::AddPlayerObjects(playerid);
     return true;
   }
   if (strcmp(cmdtext, "/gmx") == 0) {

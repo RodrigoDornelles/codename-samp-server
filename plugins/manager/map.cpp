@@ -67,16 +67,20 @@ void Map::init(void)
                             }
                         }
                     }
-                    Redis::db().lpush("manager:map:obj:" + map_id, list_obj, [map_id](cpp_redis::reply& reply){
-                        if (reply.is_integer()) {
-                            sampgdk::logprintf("[manager:map] uploaded world_id %s with %llu objects to cache.", map_id.c_str(), reply.as_integer());
-                        }
-                    }).commit();
-                    Redis::db().lpush("manager:map:del:" + map_id, list_del, [map_id](cpp_redis::reply& reply){
-                        if (reply.is_integer()) {
-                            sampgdk::logprintf("[manager:map] uploaded world_id %s with %llu removed builds to cache.", map_id.c_str(), reply.as_integer());
-                        }
-                    }).commit();
+                    if (!list_obj.empty()) {
+                        Redis::db().lpush("manager:map:obj:" + map_id, list_obj, [map_id](cpp_redis::reply& reply){
+                            if (reply.is_integer()) {
+                                sampgdk::logprintf("[manager:map] uploaded world_id %s with %llu objects to cache.", map_id.c_str(), reply.as_integer());
+                            }
+                        }).commit();
+                    }
+                    if (!list_del.empty()) {
+                        Redis::db().lpush("manager:map:del:" + map_id, list_del, [map_id](cpp_redis::reply& reply){
+                            if (reply.is_integer()) {
+                                sampgdk::logprintf("[manager:map] uploaded world_id %s with %llu removed builds to cache.", map_id.c_str(), reply.as_integer());
+                            }
+                        }).commit();
+                    }
                 }
             }
         }).commit();
@@ -116,13 +120,18 @@ void Map::OnPlayerConnect(uint16_t playerid)
     }).commit();
 }
 
-void Map::OnPlayerSpawn(uint16_t playerid)
+void Map::ClearPlayerObjects(uint16_t playerid)
 {
-    /** remove old objects */
-    for (uint16_t object_id = 0; object_id < player_objects[playerid]; object_id++)
-    {
-        DestroyPlayerObject(playerid, player_object[playerid][object_id]);
+    while (player_objects[playerid]) {
+        player_objects[playerid] -= 1;
+        DestroyPlayerObject(playerid, player_object[playerid][player_objects[playerid]]);
     }
+}
+
+void Map::AddPlayerObjects(uint16_t playerid)
+{
+    ClearPlayerObjects(playerid);
+
     /** add new objects */
     Redis::db().lrange("manager:map:obj:1", 0, -1, [playerid](cpp_redis::reply& reply) {
         if (reply.is_array()) {
@@ -132,7 +141,7 @@ void Map::OnPlayerSpawn(uint16_t playerid)
 
                     auto tokens = splitString(line, ',');
 
-                    if (tokens.size() == 6) {
+                    if (tokens.size() == 7) {
                         auto object_id = player_objects[playerid];
                         player_object[playerid][object_id] = CreatePlayerObject(playerid, std::stoi(tokens[0]), std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4]), std::stof(tokens[5]), std::stof(tokens[6]), 300.0);
                         player_objects[playerid]++;
